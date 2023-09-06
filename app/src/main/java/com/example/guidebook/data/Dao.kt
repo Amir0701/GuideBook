@@ -1,4 +1,4 @@
-package com.example.guidebook.data.repository
+package com.example.guidebook.data
 
 import androidx.room.Dao
 import androidx.room.Insert

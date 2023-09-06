@@ -1,4 +1,4 @@
-package com.example.guidebook.data.repository
+package com.example.guidebook.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
