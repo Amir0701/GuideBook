@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "data")
 data class DataDB(
     @PrimaryKey
-    var url: String?  = null,
+    var url: String,
     var startDate: String?  = null,
     var endDate: String?  = null,
     var name: String?  = null,
