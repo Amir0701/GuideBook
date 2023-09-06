@@ -9,6 +9,8 @@ import com.example.guidebook.data.repository.DataRepositoryImpl
 import com.example.guidebook.domain.repository.DataDBRepository
 import com.example.guidebook.domain.repository.DataRepository
 import com.example.guidebook.domain.service.ApiService
+import com.example.guidebook.domain.usecase.AddDataDBUseCase
+import com.example.guidebook.domain.usecase.GetDataUseCase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -86,5 +88,16 @@ object AppModule {
     @Provides
     fun dataRepository(apiService: ApiService): DataRepository{
         return DataRepositoryImpl(apiService)
+    }
+    @Singleton
+    @Provides
+    fun provideAddDataDBUseCase(dataDBRepository: DataDBRepository): AddDataDBUseCase{
+        return AddDataDBUseCase(dataDBRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetDataUseCase(dataRepository: DataRepository): GetDataUseCase{
+        return GetDataUseCase(dataRepository)
     }
 }
