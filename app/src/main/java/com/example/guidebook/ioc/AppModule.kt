@@ -66,7 +66,7 @@ object AppModule {
     }
 
     @Provides
-    fun getOKHttp(okHttpInterceptor: Interceptor): OkHttpClient{
+    fun getOKHttp(okHttpInterceptor: HttpLoggingInterceptor): OkHttpClient{
         return OkHttpClient()
             .newBuilder()
             .addInterceptor(okHttpInterceptor)
