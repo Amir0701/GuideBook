@@ -4,6 +4,10 @@ import android.app.Application
 import android.util.Log
 import androidx.room.Room
 import com.example.guidebook.data.GuideDatabase
+import com.example.guidebook.data.repository.DataDBRepositoryImpl
+import com.example.guidebook.data.repository.DataRepositoryImpl
+import com.example.guidebook.domain.repository.DataDBRepository
+import com.example.guidebook.domain.repository.DataRepository
 import com.example.guidebook.domain.service.ApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -70,5 +74,17 @@ object AppModule {
     @Provides
     fun httpLoggingInterceptor(): HttpLoggingInterceptor{
         return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Singleton
+    @Provides
+    fun dataDbRepository(db: GuideDatabase): DataDBRepository{
+        return DataDBRepositoryImpl(db)
+    }
+
+    @Singleton
+    @Provides
+    fun dataRepository(apiService: ApiService): DataRepository{
+        return DataRepositoryImpl(apiService)
     }
 }
