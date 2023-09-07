@@ -46,10 +46,9 @@ object AppModule {
     @Singleton
     @Provides
     fun retrofit(okHttpClient: OkHttpClient, gsonConverterFactory: GsonConverterFactory, gson: Gson): Retrofit {
-        Log.i("Sco", "Retro")
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://guidebook.com/service/v2/")
+            .baseUrl("https://guidebook.com/")
             .addConverterFactory(gsonConverterFactory)
             .build()
     }

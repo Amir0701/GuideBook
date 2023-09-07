@@ -25,7 +25,7 @@ class DetailFragment : Fragment() {
         webView = view.findViewById(R.id.webView)
         val arg = arguments?.getSerializable("data") as Data
         arg?.let {
-            webView.loadUrl("https://guidebook.com" + it.url)
+            webView.loadUrl("https://guidebook.com/service/v2/" + it.url)
         }
     }
 }
