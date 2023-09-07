@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.guidebook.R
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.guidebook.domain.model.Data
 import com.example.guidebook.domain.util.DataConverter
 import com.example.guidebook.domain.util.Resource
 import com.example.guidebook.presentation.viewmodel.MainActivityViewModel
@@ -43,11 +44,22 @@ class GuideFragment : Fragment() {
         viewModel = (activity as MainActivity).viewModel
         observeData()
         viewModel.getData()
+
     }
 
     private fun setUpRecyclerView(){
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        adapter.setOnItemClickListener(object : GuideRecyclerAdapter.OnItemClickListener{
+            override fun onItemClick(data: Data) {
+                val detailFragment = DetailFragment()
+                val bundle = Bundle()
+                bundle.putSerializable("data", data)
+                detailFragment.arguments = bundle
+                childFragmentManager.beginTransaction().add(R.id.frag_container, detailFragment).commit()
+            }
+        })
     }
 
     private fun observeData(){

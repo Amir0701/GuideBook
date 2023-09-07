@@ -1,6 +1,7 @@
 package com.example.guidebook.domain.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Data (
     @SerializedName("url") var url: String,
@@ -11,4 +12,4 @@ data class Data (
     @SerializedName("objType") var objType: String?  = null,
     @SerializedName("loginRequired") var loginRequired : Boolean? = null
 
-)
+): Serializable

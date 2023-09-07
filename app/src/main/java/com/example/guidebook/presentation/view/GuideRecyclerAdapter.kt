@@ -48,5 +48,19 @@ class GuideRecyclerAdapter: RecyclerView.Adapter<GuideRecyclerAdapter.ViewHolder
         Glide.with(holder.guideImage.context)
             .load(data.icon)
             .into(holder.guideImage)
+
+        holder.itemView.setOnClickListener {
+            onItemClick?.onItemClick(data)
+        }
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(data: Data)
+    }
+
+    private var onItemClick: OnItemClickListener? = null
+
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener){
+        this.onItemClick = onItemClickListener
     }
 }
