@@ -50,6 +50,7 @@ class GuideFragment : Fragment() {
     private fun setUpRecyclerView(){
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+        adapter.setOnScrollListener(recyclerView)
 
         adapter.setOnItemClickListener(object : GuideRecyclerAdapter.OnItemClickListener{
             override fun onItemClick(data: Data) {
@@ -60,6 +61,17 @@ class GuideFragment : Fragment() {
                 childFragmentManager.beginTransaction().add(R.id.frag_container, detailFragment).commit()
             }
         })
+
+        adapter.setLoadMoreListener(object : GuideRecyclerAdapter.LoadMoreListener{
+            override fun onLoadMore() {
+                if(adapter.lastVisibleItem + 3 <= viewModel.dataLiveData.value?.data?.data!!.size){
+                    val subList = viewModel.dataLiveData.value?.data?.data?.subList(0, adapter.lastVisibleItem + 4)
+                    adapter.addMoreData(subList as List<Data>)
+                    adapter.setLoaded()
+                    addToDatabase(subList)
+                }
+            }
+        })
     }
 
     private fun observeData(){
@@ -68,9 +80,15 @@ class GuideFragment : Fragment() {
                 is Resource.Success ->{
                     progressBar.visibility = View.GONE
                     resource.data?.let {responseData ->
-                        adapter.list.submitList(responseData.data)
-                        responseData.data.forEach {data->
-                            viewModel.addDataDb(dataConverter.toDataDB(data))
+                        Log.i("TAG", responseData.data.size.toString())
+                        if(responseData.data.size > 2){
+                            val subList = responseData.data.subList(0, 3)
+                            adapter.list.submitList(subList)
+                            addToDatabase(subList)
+                        }
+                        else {
+                            adapter.list.submitList(responseData.data)
+                            addToDatabase(responseData.data)
                         }
                     }
                 }
@@ -85,5 +103,11 @@ class GuideFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun addToDatabase(dataList: List<Data>){
+        dataList.forEach{data->
+            viewModel.addDataDb(dataConverter.toDataDB(data))
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.guidebook.presentation.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,12 +8,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.guidebook.R
 import com.example.guidebook.domain.model.Data
 
+
 class GuideRecyclerAdapter: RecyclerView.Adapter<GuideRecyclerAdapter.ViewHolder>() {
+    private val visibleThreshold = 3
+    var lastVisibleItem = 0
+    private var totalItemCount = 0
+    private var loading = false
 
     private val differ = object : DiffUtil.ItemCallback<Data>(){
         override fun areItemsTheSame(oldItem: Data, newItem: Data): Boolean {
@@ -62,5 +69,38 @@ class GuideRecyclerAdapter: RecyclerView.Adapter<GuideRecyclerAdapter.ViewHolder
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener){
         this.onItemClick = onItemClickListener
+    }
+
+    fun setLoaded() {
+        loading = false
+    }
+    interface LoadMoreListener{
+        fun onLoadMore()
+    }
+    private var loadMoreListener: LoadMoreListener? = null
+    fun setLoadMoreListener(loadMoreListener: LoadMoreListener){
+        this.loadMoreListener = loadMoreListener
+    }
+
+    fun addMoreData(moreData: List<Data>){
+        list.submitList(moreData)
+    }
+
+    fun setOnScrollListener(recyclerView: RecyclerView){
+        if (recyclerView.layoutManager is LinearLayoutManager) {
+            val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    totalItemCount = linearLayoutManager.itemCount
+                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
+                    Log.i("ind", lastVisibleItem.toString())
+                    if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                        loadMoreListener?.onLoadMore()
+                        loading = true
+                    }
+                }
+            })
+        }
     }
 }
