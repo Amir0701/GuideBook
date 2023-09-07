@@ -49,7 +49,7 @@ object AppModule {
         Log.i("Sco", "Retro")
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://guidebook.com/service/v2")
+            .baseUrl("https://guidebook.com/service/v2/")
             .addConverterFactory(gsonConverterFactory)
             .build()
     }
