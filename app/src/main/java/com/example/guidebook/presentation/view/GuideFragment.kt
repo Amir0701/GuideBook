@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.guidebook.R
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.guidebook.domain.util.DataConverter
 import com.example.guidebook.domain.util.Resource
 import com.example.guidebook.presentation.viewmodel.MainActivityViewModel
 
@@ -20,7 +21,7 @@ class GuideFragment : Fragment() {
     private val adapter = GuideRecyclerAdapter()
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var progressBar: ProgressBar
-
+    private val dataConverter = DataConverter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +57,9 @@ class GuideFragment : Fragment() {
                     progressBar.visibility = View.GONE
                     resource.data?.let {responseData ->
                         adapter.list.submitList(responseData.data)
+                        responseData.data.forEach {data->
+                            viewModel.addDataDb(dataConverter.toDataDB(data))
+                        }
                     }
                 }
 
